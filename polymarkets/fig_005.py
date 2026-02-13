@@ -35,15 +35,15 @@ plt.rcParams.update({
 })
 
 # ---------------------------------------------------------------------------
-# Figure layout
+# Figure layout — single 4-column gridspec for uniform panel sizing
 # ---------------------------------------------------------------------------
-fig = plt.figure(figsize=(15, 6), facecolor="white")
+fig = plt.figure(figsize=(18, 6), facecolor="white")
 
-# Use gridspec: left panel (PnL bar) | right panel (metrics small multiples)
-gs = fig.add_gridspec(1, 2, width_ratios=[1, 1.5], wspace=0.35,
-                      left=0.08, right=0.90, top=0.82, bottom=0.12)
+# PnL gets ~1.8x the width of each metric panel; metric panels are equal
+gs = fig.add_gridspec(1, 4, width_ratios=[1.8, 1, 1, 1.15], wspace=0.40,
+                      left=0.06, right=0.96, top=0.82, bottom=0.12)
 
-# ========================== LEFT PANEL: PnL Bar Chart ==========================
+# ========================== PANEL 1: PnL Bar Chart ==========================
 ax_pnl = fig.add_subplot(gs[0, 0])
 
 bar_colors = [GREEN, RED]
@@ -78,23 +78,21 @@ ax_pnl.yaxis.set_major_formatter(mticker.FuncFormatter(
     lambda x, _: f"${x:,.0f}"))
 ax_pnl.tick_params(axis="both", labelsize=11, colors=DARK_TEXT)
 ax_pnl.set_ylim(-3200, 400)
+ax_pnl.set_xlim(-0.6, 1.6)
 ax_pnl.grid(axis="y", alpha=0.25, zorder=1)
 
-# ========================== RIGHT PANEL: Key Metrics ==========================
-# Three sub-panels for Bets Placed, Win Rate, ROI
-gs_right = gs[0, 1].subgridspec(1, 3, wspace=0.50)
-
+# ========================== PANELS 2-4: Key Metrics ==========================
 metrics = [
     {"title": "Bets Placed", "values": bets_placed, "fmt": "{:.0f}", "suffix": "",
-     "ylim": (0, 120)},
+     "ylim": (0, 120), "col": 1},
     {"title": "Win Rate", "values": win_rate, "fmt": "{:.0f}", "suffix": "%",
-     "ylim": (0, 120)},
+     "ylim": (0, 120), "col": 2},
     {"title": "ROI", "values": roi, "fmt": "{:+.1f}", "suffix": "%",
-     "ylim": (-120, 20)},
+     "ylim": (-120, 20), "col": 3},
 ]
 
-for idx, m in enumerate(metrics):
-    ax = fig.add_subplot(gs_right[0, idx])
+for m in metrics:
+    ax = fig.add_subplot(gs[0, m["col"]])
     vals = m["values"]
     colors = [GREEN, RED]
 
@@ -123,6 +121,9 @@ for idx, m in enumerate(metrics):
     ax.tick_params(axis="y", labelsize=9, colors=GREY)
     ax.grid(axis="y", alpha=0.2, zorder=1)
 
+    # Widen x-axis margins so annotations don't get clipped at edges
+    ax.set_xlim(-0.6, 1.6)
+
     # Suffix on y-axis
     if m["suffix"] == "%":
         ax.yaxis.set_major_formatter(mticker.FuncFormatter(
@@ -141,6 +142,7 @@ fig.text(0.5, 0.92,
 # Save
 # ---------------------------------------------------------------------------
 out_path = "/home/wangni/notion-figures/polymarkets/fig_005.png"
-fig.savefig(out_path, dpi=200, facecolor="white", bbox_inches="tight")
+fig.savefig(out_path, dpi=200, facecolor="white",
+            bbox_inches="tight", pad_inches=0.3)
 plt.close(fig)
 print(f"Figure saved to {out_path}")
