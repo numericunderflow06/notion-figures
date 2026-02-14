@@ -26,9 +26,9 @@ BORDER_DARK = '#2C3E50'
 ARROW_COLOR = '#555555'
 DIM_COLOR = '#777777'
 
-fig, ax = plt.subplots(figsize=(18, 14.5))
+fig, ax = plt.subplots(figsize=(18, 12.5))
 ax.set_xlim(0, 18)
-ax.set_ylim(-1.5, 14.5)
+ax.set_ylim(1.5, 15.5)
 ax.set_aspect('equal')
 ax.axis('off')
 fig.patch.set_facecolor(BG_WHITE)
@@ -62,10 +62,10 @@ def bracket(x, y_top, y_bot, text, side='left'):
 # ═══════════════════════════════════════════════════════
 # TITLE (plenty of room at top)
 # ═══════════════════════════════════════════════════════
-ax.text(9, 14.0, 'Multivariate Time Series Processing Pipeline',
+ax.text(9, 15.0, 'Multivariate Time Series Processing Pipeline',
         ha='center', va='center', fontsize=17, fontweight='bold',
         color='#1B2631', zorder=10)
-ax.text(9, 13.55, '12-lead ECG example  ·  Shared Encoder  ·  Shared Perceiver Pooling (K = 64)',
+ax.text(9, 14.55, '12-lead ECG example  ·  Shared Encoder  ·  Shared Perceiver Pooling (K = 64)',
         ha='center', va='center', fontsize=11, color='#555555', zorder=10)
 
 # ═══════════════════════════════════════════════════════
@@ -74,8 +74,8 @@ ax.text(9, 13.55, '12-lead ECG example  ·  Shared Encoder  ·  Shared Perceiver
 col1_cx = 2.0        # center of input column
 col2_cx = 6.4        # center of encoder column
 
-header_y = 13.0
-subheader_y = 12.68
+header_y = 13.85
+subheader_y = 13.55
 
 ax.text(col1_cx, header_y, 'Input: 12-Lead ECG',
         ha='center', va='center', fontsize=11.5, fontweight='bold',
@@ -153,9 +153,9 @@ enc_bbox = FancyBboxPatch(
     linewidth=2.0, linestyle='--', zorder=1)
 ax.add_patch(enc_bbox)
 
-# Shared-weights label at top-right of dashed box
-ax.text(enc_x + enc_w + pad + 0.35, enc_ys[0] + enc_h + pad + 0.10,
-        'shared\nweights', ha='center', va='bottom',
+# Shared-weights label to the right of the dashed box (moved to avoid overlapping title)
+ax.text(enc_x + enc_w + pad + 1.2, enc_ys[0] + enc_h + pad - 0.05,
+        'shared weights', ha='left', va='center',
         fontsize=7.5, color='#2980B9', fontstyle='italic', zorder=6,
         bbox=dict(boxstyle='round,pad=0.15', facecolor='white',
                   edgecolor='#2980B9', lw=0.8, alpha=0.9))
@@ -267,18 +267,30 @@ ax.text(mlp_x + mlp_w + 0.15, (mlp_y + llm_y + llm_h) / 2,
         '64 × d_LLM', ha='left', va='center',
         fontsize=9.5, color=DIM_COLOR, fontstyle='italic', zorder=6)
 
-# Text tokens arrow (from left)
-ax.annotate('', xy=(llm_x - 0.02, llm_y + llm_h / 2),
-            xytext=(llm_x - 2.2, llm_y + llm_h / 2),
-            arrowprops=dict(arrowstyle='->', color='#6C3483',
-                            lw=1.5, connectionstyle='arc3,rad=0'),
-            zorder=5)
-ax.text(llm_x - 2.35, llm_y + llm_h / 2 + 0.25,
-        'Text tokens', ha='right', va='center',
+# Text tokens box and arrow (from left)
+# Dashed box around "Text tokens" for visual clarity and padding
+text_box_x = llm_x - 5.5
+text_box_w = 2.8
+text_box_h = 0.9
+text_box_y = llm_y + llm_h / 2 - text_box_h / 2
+text_box = FancyBboxPatch(
+    (text_box_x, text_box_y), text_box_w, text_box_h,
+    boxstyle='round,pad=0.12',
+    facecolor='#F5EEF8', edgecolor='#6C3483',
+    linewidth=1.2, linestyle='--', zorder=2)
+ax.add_patch(text_box)
+ax.text(text_box_x + text_box_w / 2, text_box_y + text_box_h / 2 + 0.12,
+        'Text tokens', ha='center', va='center',
         fontsize=10, color='#6C3483', fontweight='bold', zorder=6)
-ax.text(llm_x - 2.35, llm_y + llm_h / 2 - 0.15,
-        '(instruction + metadata)', ha='right', va='center',
+ax.text(text_box_x + text_box_w / 2, text_box_y + text_box_h / 2 - 0.20,
+        '(instruction + metadata)', ha='center', va='center',
         fontsize=8.5, color='#6C3483', zorder=6)
+# Arrow from text box to LLM
+ax.annotate('', xy=(llm_x - 0.02, llm_y + llm_h / 2),
+            xytext=(text_box_x + text_box_w + 0.02, text_box_y + text_box_h / 2),
+            arrowprops=dict(arrowstyle='->', color='#6C3483',
+                            lw=1.5, linestyle='--', connectionstyle='arc3,rad=0'),
+            zorder=5)
 
 # ═══════════════════════════════════════════════════════
 # DIMENSION FLOW SIDEBAR (far right)
