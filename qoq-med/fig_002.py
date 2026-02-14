@@ -36,7 +36,7 @@ SINGLE_BD   = "#7B1FA2"
 
 # ── Figure setup ────────────────────────────────────────────────────
 fig, ax = plt.subplots(figsize=(32, 17))
-ax.set_xlim(-1.5, 30.5)
+ax.set_xlim(-1.5, 31.5)
 ax.set_ylim(-2.2, 16.8)
 ax.set_aspect('equal')
 ax.axis('off')
@@ -61,7 +61,7 @@ def arr(x1, y1, x2, y2, color=ARROW_CLR, lw=2.2, style='->', cs=None, zorder=2):
         props['connectionstyle'] = cs
     ax.annotate('', xy=(x2, y2), xytext=(x1, y1), arrowprops=props, zorder=zorder)
 
-def dim(x, y, s, fs=8.5):
+def dim(x, y, s, fs=10):
     txt(x, y, s, fs=fs, fc=DIM_CLR, style='italic',
         bbox=dict(boxstyle='round,pad=0.12', fc='white', ec='none', alpha=0.9))
 
@@ -75,9 +75,9 @@ def snow(x, y, size=13):
 # ====================================================================
 # TITLE
 # ====================================================================
-txt(14.5, 16.3, "Multivariate ECG Handling: 12-Lead Perceiver Pipeline",
+txt(15.0, 16.3, "Multivariate ECG Handling: 12-Lead Perceiver Pipeline",
     fs=20, fw='bold')
-txt(14.5, 15.7,
+txt(15.0, 15.7,
     "Left: 12-lead ECG pipeline (12 parallel tracks \u2192 768 latents)     "
     "Right: Single-channel pipeline (1 track \u2192 64 latents)",
     fs=11, fc=DIM_CLR)
@@ -85,11 +85,11 @@ txt(14.5, 15.7,
 # ====================================================================
 # PANEL BACKGROUNDS
 # ====================================================================
-rbox(-1.2, -1.8, 21.0, 18.0, PANEL_BG, '#B0BEC5', lw=1.5, pad=0.3, ls='--', zorder=0)
-txt(9.0, 14.8, "12-Lead ECG Pipeline", fs=15, fw='bold', fc=FROZEN_BD)
+rbox(-1.2, -1.8, 22.0, 18.0, PANEL_BG, '#B0BEC5', lw=1.5, pad=0.3, ls='--', zorder=0)
+txt(9.5, 14.8, "12-Lead ECG Pipeline", fs=15, fw='bold', fc=FROZEN_BD)
 
-rbox(20.4, -1.8, 9.8, 18.0, PANEL_BG, '#B0BEC5', lw=1.5, pad=0.3, ls='--', zorder=0)
-txt(25.3, 14.8, "Single-Channel Pipeline", fs=15, fw='bold', fc=SINGLE_BD)
+rbox(21.4, -1.8, 9.8, 18.0, PANEL_BG, '#B0BEC5', lw=1.5, pad=0.3, ls='--', zorder=0)
+txt(26.3, 14.8, "Single-Channel Pipeline", fs=15, fw='bold', fc=SINGLE_BD)
 
 # ====================================================================
 # LEFT SIDE: 12-LEAD ECG PIPELINE
@@ -126,7 +126,7 @@ lead_ys = np.linspace(lead_y_start, lead_y_end, n_leads)
 jepa_x = 2.8
 jepa_w, jepa_h = 2.2, 0.68
 
-perc_x = 6.5
+perc_x = 7.5
 perc_w, perc_h = 2.2, 0.68
 
 ecg_out_x = ecg_x + ecg_w
@@ -140,8 +140,8 @@ for i, (lead_name, ly) in enumerate(zip(all_leads, lead_ys)):
 
     # ECG-JEPA box (frozen)
     rbox(jepa_x, ly - jepa_h / 2, jepa_w, jepa_h, FROZEN_BG, FROZEN_BD, lw=1.3)
-    txt(jepa_x + jepa_w / 2, ly + 0.07, "ECG-JEPA", fs=7.5, fw='bold', fc=FROZEN_BD)
-    txt(jepa_x + jepa_w / 2, ly - 0.17, f"Lead {lead_name}", fs=6.5, fc=DIM_CLR)
+    txt(jepa_x + jepa_w / 2, ly + 0.07, "ECG-JEPA", fs=8.5, fw='bold', fc=FROZEN_BD)
+    txt(jepa_x + jepa_w / 2, ly - 0.17, f"Lead {lead_name}", fs=7.5, fc=DIM_CLR)
 
     # Arrow JEPA → Perceiver
     arr(jepa_x + jepa_w + 0.05, ly, perc_x - 0.1, ly,
@@ -149,8 +149,8 @@ for i, (lead_name, ly) in enumerate(zip(all_leads, lead_ys)):
 
     # Perceiver Resampler box (trainable)
     rbox(perc_x, ly - perc_h / 2, perc_w, perc_h, TRAIN_BG, TRAIN_BD, lw=1.3)
-    txt(perc_x + perc_w / 2, ly + 0.07, "Perceiver", fs=7.5, fw='bold', fc=TRAIN_BD)
-    txt(perc_x + perc_w / 2, ly - 0.17, "64 latents", fs=6.5, fc=DIM_CLR)
+    txt(perc_x + perc_w / 2, ly + 0.07, "Perceiver", fs=8.5, fw='bold', fc=TRAIN_BD)
+    txt(perc_x + perc_w / 2, ly - 0.17, "64 latents", fs=7.5, fc=DIM_CLR)
 
 # Column labels above tracks
 txt(jepa_x + jepa_w / 2, lead_y_start + 0.7, "ECG-JEPA Encoder", fs=11, fw='bold', fc=FROZEN_BD)
@@ -160,20 +160,19 @@ txt(perc_x + perc_w / 2, lead_y_start + 0.7, "Perceiver Resampler", fs=11, fw='b
 badge(perc_x + perc_w / 2, lead_y_start + 0.28, "TRAINABLE", TRAIN_BG, TRAIN_BD)
 
 # Dimension annotations above column labels
-dim(jepa_x + jepa_w / 2, lead_y_start + 1.2, "N_win \u00d7 d_jepa per lead")
-dim(perc_x + perc_w / 2, lead_y_start + 1.2, "64 \u00d7 d_model per lead")
+dim(jepa_x + jepa_w / 2, lead_y_start + 1.3, "N_win \u00d7 d_jepa per lead")
+dim(perc_x + perc_w / 2, lead_y_start + 1.3, "64 \u00d7 d_model per lead")
 
-# Linear projection note between the two column headers
+# Linear projection note — positioned between column headers at mid height
 mid_arrow_x = (jepa_x + jepa_w + perc_x) / 2
-txt(mid_arrow_x, lead_y_start + 0.7,
-    "Linear Proj", fs=7.5, fc='#F57F17', fw='bold',
-    bbox=dict(boxstyle='round,pad=0.1', fc='#FFF9C4', ec='#FBC02D', lw=0.8, alpha=0.9))
-txt(mid_arrow_x, lead_y_start + 0.3,
-    "d_jepa \u2192 d_model", fs=6.5, fc='#F57F17',
-    bbox=dict(boxstyle='round,pad=0.08', fc='#FFF9C4', ec='none', alpha=0.8))
+# Use a single combined label to avoid vertical stacking issues
+txt(mid_arrow_x, lead_y_start + 0.55,
+    "Linear Proj\n(d_jepa \u2192 d_model)", fs=9.5, fc='#F57F17', fw='bold',
+    bbox=dict(boxstyle='round,pad=0.15', fc='#FFF9C4', ec='#FBC02D', lw=1.0, alpha=0.95),
+    zorder=7)
 
 # --- Concatenation block ---
-concat_x = 10.2
+concat_x = 11.2
 concat_w, concat_h = 2.0, 2.8
 concat_cy = (lead_y_start + lead_y_end) / 2
 concat_y = concat_cy - concat_h / 2
@@ -190,7 +189,7 @@ for ly in lead_ys:
         color=CONCAT_BD, lw=0.7, style='->')
 
 # --- Gated Cross-Attention in LLM ---
-gca_x = 13.5
+gca_x = 14.5
 gca_w, gca_h = 3.8, 2.8
 gca_cy = concat_cy
 gca_y = gca_cy - gca_h / 2
@@ -213,10 +212,10 @@ for j, yoff in enumerate([0.0, -0.75]):
 # Gating formula callout below LLM box
 txt(gca_x + gca_w / 2, gca_y - 0.55,
     r"$h' = h + \alpha \cdot \mathrm{CrossAttn}(Q{=}h,\; K{=}Z,\; V{=}Z)$",
-    fs=9, fc='#7D6608',
+    fs=11, fc='#7D6608',
     bbox=dict(boxstyle='round,pad=0.18', fc=GATE_BG, ec=GATE_BD, lw=1.0))
 txt(gca_x + gca_w / 2, gca_y - 1.05,
-    r"$\alpha$ init = 0  $\rightarrow$  LLM starts as text-only", fs=8.5, fc=DIM_CLR)
+    r"$\alpha$ init = 0  $\rightarrow$  LLM starts as text-only", fs=10.5, fc=DIM_CLR)
 
 # --- Text Output (left side) - to the right of LLM box ---
 out_x = gca_x + gca_w + 0.6
@@ -234,7 +233,7 @@ arr(gca_x + gca_w + 0.1, gca_cy, out_x - 0.05, gca_cy,
 # ====================================================================
 # RIGHT SIDE: SINGLE-CHANNEL PIPELINE (vertical top-to-bottom)
 # ====================================================================
-right_cx = 25.3
+right_cx = 26.3
 step_gap = 2.6  # vertical spacing between stages
 
 # Stage Y positions (top to bottom)
@@ -340,9 +339,9 @@ for i, (lab, bg, bd) in enumerate(leg_items):
 # ====================================================================
 # VERTICAL DIVIDER
 # ====================================================================
-ax.plot([20.2, 20.2], [-0.5, 15.0], color='#B0BEC5', lw=1.5,
+ax.plot([21.2, 21.2], [-0.5, 15.0], color='#B0BEC5', lw=1.5,
         linestyle=':', zorder=1, alpha=0.5)
-txt(20.2, 0.3, "vs.", fs=14, fw='bold', fc='#78909C', rotation=0,
+txt(21.2, 0.3, "vs.", fs=14, fw='bold', fc='#78909C', rotation=0,
     bbox=dict(boxstyle='round,pad=0.2', fc=WHITE, ec='#B0BEC5', lw=1))
 
 # ====================================================================
