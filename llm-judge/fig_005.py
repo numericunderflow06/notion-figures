@@ -200,7 +200,7 @@ for k, gy in enumerate(gen_y_positions):
 
 # Label fan-out arrow
 draw_label_on_arrow(ax, (X_POLICY + BOX_W/2 + X_GEN_FAN - gen_box_w/2)/2,
-                    Y_MAIN + 1.7, "sample K=4", fontsize=9, color=COL_GEN_EDGE)
+                    Y_MAIN + 1.7, "sample K=4", fontsize=11, color=COL_GEN_EDGE)
 
 # ── 4. LLM Judge ────────────────────────────────────────────────────────────
 draw_box(ax, X_JUDGE, Y_MAIN, BOX_W + 0.2, BOX_H * 1.2,
@@ -249,13 +249,13 @@ for j, (sy, slbl, sw, sc, se, stc) in enumerate(
 draw_box(ax, X_NORM, Y_MAIN, BOX_W, BOX_H * 1.2,
          "Normalize", sublabel="$\\hat{r} = (r - \\mu_G) / \\sigma_G$",
          fc=COL_REWARD, ec=COL_REWARD_EDGE, tc=COL_TEXT_WHITE,
-         fontsize=12, sublabel_fontsize=9.5)
+         fontsize=12, sublabel_fontsize=11)
 
 # Arrow from scores to normalize
 arrow_scores_start = X_SCORES + SMALL_W/2 + 1.05
 draw_arrow(ax, arrow_scores_start, Y_MAIN, X_NORM - BOX_W/2, Y_MAIN)
 draw_label_on_arrow(ax, (arrow_scores_start + X_NORM - BOX_W/2)/2,
-                    Y_MAIN + 0.3, "$r = \\Sigma w_i \\cdot s_i$", fontsize=9.5,
+                    Y_MAIN + 0.3, "$r = \\Sigma w_i \\cdot s_i$", fontsize=11,
                     color=COL_REWARD_EDGE)
 
 # ── 7. GRPO Loss ─────────────────────────────────────────────────────────────
@@ -267,7 +267,7 @@ draw_box(ax, X_LOSS, Y_MAIN, BOX_W, BOX_H * 1.2,
 # Arrow from normalize to loss
 draw_arrow(ax, X_NORM + BOX_W/2, Y_MAIN, X_LOSS - BOX_W/2, Y_MAIN)
 draw_label_on_arrow(ax, (X_NORM + BOX_W/2 + X_LOSS - BOX_W/2)/2,
-                    Y_MAIN + 0.3, "advantages $\\hat{A}$", fontsize=9.5,
+                    Y_MAIN + 0.3, "advantages $\\hat{A}$", fontsize=11,
                     color=COL_LOSS_EDGE)
 
 # ── 8. Gradient Update ───────────────────────────────────────────────────────
@@ -375,11 +375,11 @@ draw_label_on_arrow(ax, kl_label_x, kl_label_y,
 
 # ── "frozen" indicator for reference policy ───────────────────────────────────
 # Use text instead of emoji to avoid font issues
-ax.text(X_POLICY - BOX_W/2 - 0.3, Y_REF, "FROZEN",
-        ha="center", va="center", fontsize=7, fontweight="bold",
+ax.text(X_POLICY - BOX_W/2 - 0.35, Y_REF, "FROZEN",
+        ha="center", va="center", fontsize=11, fontweight="bold",
         color=COL_REF_EDGE, rotation=90, zorder=6,
         bbox=dict(facecolor="#F1F5F9", edgecolor=COL_REF_EDGE,
-                  pad=2, boxstyle="round,pad=0.15", linewidth=1))
+                  pad=3, boxstyle="round,pad=0.2", linewidth=1.2))
 
 # ══════════════════════════════════════════════════════════════════════════════
 # ANNOTATIONS & LABELS
@@ -388,13 +388,13 @@ ax.text(X_POLICY - BOX_W/2 - 0.3, Y_REF, "FROZEN",
 # Epsilon annotation near GRPO loss
 ax.text(X_LOSS, Y_MAIN + BOX_H*1.2/2 + 0.18,
         "$\\epsilon = 0.2$  (clip range)",
-        ha="center", va="bottom", fontsize=8.5, color=COL_LOSS_EDGE,
+        ha="center", va="bottom", fontsize=11, color=COL_LOSS_EDGE,
         fontstyle="italic", zorder=6)
 
 # Per-token annotation near GRPO loss
 ax.text(X_LOSS, Y_MAIN - BOX_H*1.2/2 - 0.15,
         "per-token log-probs",
-        ha="center", va="top", fontsize=8, color=COL_TEXT_MED,
+        ha="center", va="top", fontsize=11, color=COL_TEXT_MED,
         fontstyle="italic", zorder=6)
 
 # ── Title ─────────────────────────────────────────────────────────────────────

@@ -33,7 +33,7 @@ BORDER_CLR  = "#34495E"
 
 fig, ax = plt.subplots(figsize=(16, 19), facecolor=BG)
 ax.set_xlim(0, 16)
-ax.set_ylim(0, 19)
+ax.set_ylim(0, 19)   # will be tightened after layout
 ax.set_aspect("equal")
 ax.axis("off")
 
@@ -162,19 +162,21 @@ draw_box(sx3, y4, score_w, BH_SCORE, SCORE_CLR_K,
          border_color="#6C3483")
 step_number(NUM_X, y4, BH_SCORE, 4)
 
-# Weight labels below score boxes
-ax.text(sx1 + score_w/2, y4 - 0.18, "weight = 0.5",
+# Weight labels below score boxes – with white background for readability
+weight_bbox = dict(boxstyle="round,pad=0.08", facecolor="white",
+                   edgecolor="none", alpha=0.95)
+ax.text(sx1 + score_w/2, y4 - 0.22, "weight = 0.5",
         ha="center", va="center", fontsize=9.5, color=SCORE_CLR_C,
-        fontweight="bold", zorder=4)
-ax.text(sx2 + score_w/2, y4 - 0.18, "weight = 0.3",
+        fontweight="bold", zorder=6, bbox=weight_bbox)
+ax.text(sx2 + score_w/2, y4 - 0.22, "weight = 0.3",
         ha="center", va="center", fontsize=9.5, color=SCORE_CLR_R,
-        fontweight="bold", zorder=4)
-ax.text(sx3 + score_w/2, y4 - 0.18, "weight = 0.2",
+        fontweight="bold", zorder=6, bbox=weight_bbox)
+ax.text(sx3 + score_w/2, y4 - 0.22, "weight = 0.2",
         ha="center", va="center", fontsize=9.5, color=SCORE_CLR_K,
-        fontweight="bold", zorder=4)
+        fontweight="bold", zorder=6, bbox=weight_bbox)
 
 # ── STEP 5: Weighted Formula ───────────────────────────────────────────────
-current_y -= 0.15   # extra space for weight labels
+current_y -= 0.30   # extra space for weight labels
 BH_FORMULA = 1.0
 y5 = current_y - BH_FORMULA
 current_y = y5 - GAP
@@ -273,11 +275,11 @@ draw_arrow(CX, y3, sx3 + score_w/2, y4 + BH_SCORE,
            lw=1.8, connectionstyle="arc3,rad=-0.15")
 
 # Three score boxes → formula (fan in, color-coded)
-draw_arrow(sx1 + score_w/2, y4 - 0.28, CX - 1.5, y5 + BH_FORMULA,
+draw_arrow(sx1 + score_w/2, y4 - 0.38, CX - 1.5, y5 + BH_FORMULA,
            lw=1.8, color=SCORE_CLR_C, connectionstyle="arc3,rad=0.12")
-draw_arrow(sx2 + score_w/2, y4 - 0.28, CX, y5 + BH_FORMULA,
+draw_arrow(sx2 + score_w/2, y4 - 0.38, CX, y5 + BH_FORMULA,
            lw=1.8, color=SCORE_CLR_R, connectionstyle="arc3,rad=0.0")
-draw_arrow(sx3 + score_w/2, y4 - 0.28, CX + 1.5, y5 + BH_FORMULA,
+draw_arrow(sx3 + score_w/2, y4 - 0.38, CX + 1.5, y5 + BH_FORMULA,
            lw=1.8, color=SCORE_CLR_K, connectionstyle="arc3,rad=-0.12")
 
 # Remaining vertical arrows
@@ -338,6 +340,12 @@ for i, (label, clr) in enumerate([
     ax.add_patch(rect)
     ax.text(bx + 0.45, legend_y - 0.31, label,
             ha="left", va="center", fontsize=9.5, color="#333333", zorder=4)
+
+# ── Tighten canvas: crop excessive white space below legend ───────────────
+fig_bottom = legend_y - 0.8   # small padding below legend
+ax.set_ylim(fig_bottom, 19)
+fig_height = (19 - fig_bottom) * (16 / 16)   # maintain aspect
+fig.set_size_inches(16, fig_height)
 
 plt.savefig("/home/wangni/notion-figures/llm-judge/fig_007.png",
             dpi=200, bbox_inches="tight", facecolor=BG, edgecolor="none")
