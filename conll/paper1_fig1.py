@@ -16,7 +16,7 @@ zuco2 = [62.25, 68.29, None]    # ZuCo 2.0 accuracy (%)
 
 # ---------- plot setup ----------
 # Use wider spacing between groups by setting x positions manually
-x = np.array([0.0, 1.1, 2.5])   # extra gap before Full-Curriculum for annotation room
+x = np.array([0.0, 1.1, 2.2])   # evenly spaced groups
 n = len(strategies)
 
 fig, ax = plt.subplots(figsize=(8.5, 5.2), dpi=200)
@@ -63,34 +63,34 @@ for i, v in enumerate(zuco2):
         label_bar(x[i] + bar_w / 2 + gap, v, c2)
 
 # ---------- annotate the +6.04 pp transfer gain ----------
-sf_bar_x = x[1] + bar_w / 2 + gap   # sleep-flamingo ZuCo 2.0 bar center x
-fs_y = zuco2[0]                       # from-scratch  = 62.25
-sf_y = zuco2[1]                       # sleep-flamingo = 68.29
-mid_y = (fs_y + sf_y) / 2
+# Compare ZuCo 2.0 From-Scratch (62.25%) vs ZuCo 2.0 Sleep-Flamingo (68.29%)
+fs_bar_x = x[0] + bar_w / 2 + gap    # from-scratch ZuCo 2.0 bar center x
+sf_bar_x = x[1] + bar_w / 2 + gap    # sleep-flamingo ZuCo 2.0 bar center x
+fs_y = zuco2[0]                        # from-scratch  = 62.25
+sf_y = zuco2[1]                        # sleep-flamingo = 68.29
+mid_x = (fs_bar_x + sf_bar_x) / 2     # midpoint between the two bars
 
-# Vertical double-headed arrow just right of the sleep-flamingo ZuCo 2.0 bar
-arrow_x = sf_bar_x + bar_w / 2 + 0.07
-ax.annotate(
-    "", xy=(arrow_x, sf_y - 0.25), xytext=(arrow_x, fs_y + 0.25),
-    arrowprops=dict(arrowstyle="<->", lw=1.5, color=c_gain),
-    zorder=5,
-)
+# Horizontal bracket connecting the tops of the two ZuCo 2.0 bars
+bracket_y = sf_y + 3.8   # above both bars and value labels
+# Draw horizontal line
+ax.plot([fs_bar_x, sf_bar_x], [bracket_y, bracket_y],
+        lw=1.5, color=c_gain, zorder=5)
+# Draw vertical ticks down from bracket to bar tops
+ax.plot([fs_bar_x, fs_bar_x], [bracket_y, bracket_y - 0.6],
+        lw=1.5, color=c_gain, zorder=5)
+ax.plot([sf_bar_x, sf_bar_x], [bracket_y, bracket_y - 0.6],
+        lw=1.5, color=c_gain, zorder=5)
 
-# Place annotation text in the gap between Sleep-Flamingo and Full-Curriculum groups
-text_x = (x[1] + x[2]) / 2 + 0.1
+# Annotation text above the bracket
 ax.text(
-    text_x, mid_y,
-    "+6.04 pp\ncross-modality\ntransfer gain",
+    mid_x, bracket_y + 0.5,
+    "+6.04 pp cross-modality transfer gain",
     fontsize=9, fontweight="bold", color=c_gain,
-    ha="center", va="center",
+    ha="center", va="bottom",
     bbox=dict(boxstyle="round,pad=0.35", facecolor="#f0f7f4", edgecolor=c_gain,
               alpha=0.95, linewidth=1.0),
     zorder=6,
 )
-
-# Thin horizontal connector from arrow to text box
-ax.plot([arrow_x + 0.02, text_x - 0.38], [mid_y, mid_y],
-        lw=1.0, color=c_gain, ls="-", zorder=4)
 
 # ---------- axes & labels ----------
 ax.set_xticks(x)
@@ -100,7 +100,7 @@ ax.set_title(
     "ZuCo Classification Accuracy by Initialization Strategy",
     fontsize=13, fontweight="bold", pad=14,
 )
-ax.set_ylim(55, 76)
+ax.set_ylim(54.5, 79)
 ax.set_xlim(-0.55, x[-1] + 0.55)
 ax.yaxis.set_major_locator(mticker.MultipleLocator(2))
 ax.yaxis.set_minor_locator(mticker.MultipleLocator(1))
@@ -119,9 +119,13 @@ ax.spines["left"].set_linewidth(0.6)
 ax.spines["bottom"].set_linewidth(0.6)
 
 # Note for missing full-curriculum ZuCo 2.0 value
+# Position at the vertical center of the bar area so it is visually prominent
+na_x = x[2] + bar_w / 2 + gap
+na_y = 67  # vertical center of the bar area (~midpoint of y-axis range)
 ax.text(
-    x[2] + bar_w / 2 + gap, 56.0, "n/a",
-    ha="center", va="bottom", fontsize=9, fontstyle="italic", color="#999999",
+    na_x, na_y, "n/a",
+    ha="center", va="center", fontsize=12, fontstyle="italic",
+    fontweight="bold", color="#888888",
 )
 
 plt.tight_layout()
