@@ -35,30 +35,30 @@ dhw_only = [
     "dhw_share",
 ]
 
-fig, ax = plt.subplots(figsize=(14, 8.5), dpi=200)
+fig, ax = plt.subplots(figsize=(14, 9.8), dpi=200)
 ax.set_xlim(0, 14)
-ax.set_ylim(0, 8.5)
+ax.set_ylim(0, 9.8)
 ax.set_aspect("equal")
 ax.axis("off")
 fig.patch.set_facecolor("white")
 
 # Title
 ax.text(
-    7.0, 8.05,
+    7.0, 9.30,
     "Channel Inventory: Space Heating vs DHW",
     ha="center", va="center",
     fontsize=17, fontweight="bold", color=TEXT_COLOR,
 )
 ax.text(
-    7.0, 7.55,
+    7.0, 8.80,
     "13 TS_FEATURE_COLS partitioned into two 8-channel task subsets",
     ha="center", va="center",
     fontsize=11, color=MUTED, style="italic",
 )
 
 # --- Venn circles ---
-ch_center = (4.5, 3.8)
-dhw_center = (9.5, 3.8)
+ch_center = (4.5, 5.05)
+dhw_center = (9.5, 5.05)
 radius = 3.2
 
 ch_circle = Circle(
@@ -78,32 +78,32 @@ ax.add_patch(dhw_circle)
 ax.add_patch(Circle(ch_center, radius, facecolor="none", edgecolor=CH_COLOR, linewidth=2.4))
 ax.add_patch(Circle(dhw_center, radius, facecolor="none", edgecolor=DHW_COLOR, linewidth=2.4))
 
-# --- Circle headers ---
+# --- Circle headers (just above the circle tops) ---
 ax.text(
-    2.3, 6.55, "Space Heating (CH)",
+    2.3, 7.80, "Space Heating (CH)",
     ha="center", va="center",
     fontsize=13, fontweight="bold", color=CH_COLOR,
 )
 ax.text(
-    2.3, 6.15, "8 channels",
+    2.3, 7.40, "8 channels",
     ha="center", va="center",
     fontsize=10, color=CH_COLOR, alpha=0.85,
 )
 
 ax.text(
-    11.7, 6.55, "DHW (Hot Water)",
+    11.7, 7.80, "DHW (Hot Water)",
     ha="center", va="center",
     fontsize=13, fontweight="bold", color=DHW_COLOR,
 )
 ax.text(
-    11.7, 6.15, "8 channels",
+    11.7, 7.40, "8 channels",
     ha="center", va="center",
     fontsize=10, color=DHW_COLOR, alpha=0.85,
 )
 
 # Shared section header
 ax.text(
-    7.0, 6.05, "Shared (3)",
+    7.0, 7.30, "Shared (3)",
     ha="center", va="center",
     fontsize=11, fontweight="bold", color=SHARED_COLOR,
 )
@@ -113,7 +113,7 @@ mono = {"family": "monospace", "fontsize": 9.4}
 
 # CH-only labels (left side)
 ch_x = 2.55
-ch_y_start = 5.35
+ch_y_start = 6.60
 ch_y_step = 0.55
 for i, name in enumerate(ch_only):
     ax.text(
@@ -124,7 +124,7 @@ for i, name in enumerate(ch_only):
 
 # Shared labels (center overlap)
 shared_x = 7.0
-shared_y_start = 5.05
+shared_y_start = 6.30
 shared_y_step = 0.55
 for i, name in enumerate(shared):
     ax.text(
@@ -135,7 +135,7 @@ for i, name in enumerate(shared):
 
 # DHW-only labels (right side)
 dhw_x = 11.45
-dhw_y_start = 5.35
+dhw_y_start = 6.60
 dhw_y_step = 0.55
 for i, name in enumerate(dhw_only):
     ax.text(
@@ -144,28 +144,29 @@ for i, name in enumerate(dhw_only):
         color=TEXT_COLOR, **mono,
     )
 
-# --- Counts inside each region (bottom of each lobe) ---
+# --- Counts BELOW the circles (circles span y=1.85 to 8.25; bottoms at y=1.85 in center) ---
+counts_y = 1.40
 ax.text(
-    2.55, 1.55, "5 CH-only",
+    2.55, counts_y, "5 CH-only",
     ha="center", va="center",
-    fontsize=10, fontweight="bold", color=CH_COLOR, alpha=0.9,
+    fontsize=10.5, fontweight="bold", color=CH_COLOR, alpha=0.95,
 )
 ax.text(
-    7.0, 1.55, "3 shared",
+    7.0, counts_y, "3 shared",
     ha="center", va="center",
-    fontsize=10, fontweight="bold", color=SHARED_COLOR, alpha=0.95,
+    fontsize=10.5, fontweight="bold", color=SHARED_COLOR,
 )
 ax.text(
-    11.45, 1.55, "5 DHW-only",
+    11.45, counts_y, "5 DHW-only",
     ha="center", va="center",
-    fontsize=10, fontweight="bold", color=DHW_COLOR, alpha=0.9,
+    fontsize=10.5, fontweight="bold", color=DHW_COLOR, alpha=0.95,
 )
 
-# --- Legend / summary box bottom-left ---
+# --- Legend / summary box bottom-left (below the counts row) ---
 legend_x = 0.35
-legend_y = 0.85
+legend_y = 0.50
 legend_w = 4.6
-legend_h = 1.0
+legend_h = 0.85
 legend_box = FancyBboxPatch(
     (legend_x, legend_y - legend_h / 2),
     legend_w, legend_h,
@@ -174,7 +175,7 @@ legend_box = FancyBboxPatch(
 )
 ax.add_patch(legend_box)
 ax.text(
-    legend_x + 0.18, legend_y + 0.22,
+    legend_x + 0.18, legend_y + 0.18,
     "Union = 13 TS_FEATURE_COLS",
     ha="left", va="center",
     fontsize=10.5, fontweight="bold", color=TEXT_COLOR,
@@ -186,10 +187,10 @@ ax.text(
     fontsize=10, color=TEXT_COLOR, family="monospace",
 )
 
-# --- Footnote (bottom right) ---
+# --- Footnote on its own line at the bottom (clear of all circles and labels) ---
 ax.text(
-    13.65, 0.85,
-    "Note: outdoor_temp_min and dhw_share are\ntask-exclusive (CH and DHW respectively).",
+    13.65, 0.50,
+    "Note: outdoor_temp_min and dhw_share are task-exclusive (CH and DHW respectively).",
     ha="right", va="center",
     fontsize=9, color=MUTED, style="italic",
 )
