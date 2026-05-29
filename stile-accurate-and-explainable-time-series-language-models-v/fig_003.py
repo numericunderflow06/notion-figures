@@ -16,8 +16,8 @@ from matplotlib.lines import Line2D
 
 
 def main():
-    fig, ax = plt.subplots(figsize=(15.5, 8.5), dpi=200)
-    ax.set_xlim(0, 15.5)
+    fig, ax = plt.subplots(figsize=(16.2, 8.5), dpi=200)
+    ax.set_xlim(-0.7, 15.5)
     ax.set_ylim(0, 8.5)
     ax.set_aspect('equal')
     ax.axis('off')
@@ -79,13 +79,14 @@ def main():
                                      arrowstyle='-|>', mutation_scale=14,
                                      lw=1.5, color='#333'))
 
-    # time-series x input
-    ax.text(0.20, y_s1, 'time-\nseries x',
-            ha='left', va='center', fontsize=9.5, color=MUTED, style='italic')
-    ax.add_patch(FancyArrowPatch((0.32, y_s1),
+    # time-series x input — placed clearly to the left of the first box
+    # with adequate padding so it no longer overlaps the box border.
+    ax.text(-0.40, y_s1, 'time-series\ninput  $x$',
+            ha='center', va='center', fontsize=10, color=MUTED, style='italic')
+    ax.add_patch(FancyArrowPatch((0.00, y_s1),
                                   (s1_modules[0][0] - box_w / 2 - 0.03, y_s1),
-                                  arrowstyle='-|>', mutation_scale=11,
-                                  lw=1.2, color='#777'))
+                                  arrowstyle='-|>', mutation_scale=12,
+                                  lw=1.4, color='#777'))
 
     # stage 1 hyperparameter caption
     cap1 = (r'AdamW,  $\mathrm{lr}=2\times 10^{-4}$,  linear + warmup,  bf16'
