@@ -53,8 +53,8 @@ CTX_OPTIONAL = [
 ]
 
 CTX_DERIVED = [
-    ("top1_name -> class_names[class_idx]",           "name of the top-1 class"),
-    ("top2_gap  -> p(top1) - p(top2)",                "hedge gate input"),
+    ("top1_name: str",     "= class_names[class_idx]    (top-1 class name)"),
+    ("top2_gap: float",    "= p(top1) - p(top2)         (hedge gate input)"),
 ]
 
 # TemplateConfig fields, grouped by the comment headers in base.py
@@ -149,7 +149,8 @@ def header_box(x, y, w, h, title, subtitle, edge):
 
 
 def field_row(x, y, w, h, name, desc, bg, name_color=TEXT_DARK,
-              left_bar_color=None, mono_size=9.0, desc_size=8.3):
+              left_bar_color=None, mono_size=10.0, desc_size=9.4,
+              desc_mono=False):
     """One field row with optional left color bar."""
     ax.add_patch(Rectangle(
         (x, y - h), w, h,
@@ -165,9 +166,10 @@ def field_row(x, y, w, h, name, desc, bg, name_color=TEXT_DARK,
             ha="left", va="center", fontsize=mono_size,
             family="monospace", color=name_color)
     if desc:
+        desc_family = "monospace" if desc_mono else None
         ax.text(x + w - 0.6, y - h / 2 + 0.05, desc,
                 ha="right", va="center", fontsize=desc_size,
-                color=TEXT_MUTED, style="italic")
+                color=TEXT_MUTED, style="italic", family=desc_family)
 
 
 # ---------------------------------------------------------------------------
@@ -224,8 +226,9 @@ header_box(LX, cur_y, LW, 2.2,
            edge="#0969da")
 cur_y -= 2.5
 for name, desc in CTX_DERIVED:
-    field_row(LX, cur_y, LW, 2.55, name, desc, CTX_DERIV_BG)
-    cur_y -= 2.6
+    field_row(LX, cur_y, LW, 2.8, name, desc, CTX_DERIV_BG,
+              mono_size=9.6, desc_size=8.7, desc_mono=True)
+    cur_y -= 2.85
 
 
 # ---------------------------------------------------------------------------
@@ -267,22 +270,23 @@ for group_title, family_key, fields in CFG_GROUPS:
                            linewidth=0.7, edgecolor="#d0d7de",
                            facecolor=color + "22"))  # 22 ~ 13% alpha hex
     ax.text(RX + 1.2, cur_y - GROUP_HEADER_H / 2 + 0.05, group_title,
-            ha="left", va="center", fontsize=10.5, fontweight="bold",
+            ha="left", va="center", fontsize=10.2, fontweight="bold",
             color=TEXT_DARK)
-    # Family chip on the right of the header
-    chip_w, chip_h = 9.5, 1.4
+    # Family chip on the right of the header — sized to fit inside the strip
+    chip_w, chip_h = 13.2, 1.25
     chip_x = RX + RW - chip_w - 0.6
     chip_y = cur_y - GROUP_HEADER_H / 2 - chip_h / 2 + 0.05
     ax.add_patch(FancyBboxPatch(
         (chip_x, chip_y), chip_w, chip_h,
-        boxstyle="round,pad=0.02,rounding_size=0.35",
+        boxstyle="round,pad=0.02,rounding_size=0.3",
         linewidth=0, facecolor=color,
     ))
     ax.text(chip_x + chip_w / 2, chip_y + chip_h / 2 + 0.02,
             f"-> {family_key}.py templates",
-            ha="center", va="center", fontsize=8.0,
+            ha="center", va="center", fontsize=7.2,
             color="white", fontweight="bold", family="monospace")
-    cur_y -= GROUP_HEADER_H + 0.15
+    # Extra breathing room so the chip never visually crowds the first row
+    cur_y -= GROUP_HEADER_H + 0.85
 
     for fname in fields:
         field_row(RX, cur_y, RW, ROW_H, fname, "",
@@ -290,28 +294,20 @@ for group_title, family_key, fields in CFG_GROUPS:
                   mono_size=8.4)
         cur_y -= ROW_H + 0.04
 
-    cur_y -= 0.45  # gap between groups
+    cur_y -= 0.35  # gap between groups
 
 
 # ---------------------------------------------------------------------------
-# Connector + footer legend
+# Footer legend
 # ---------------------------------------------------------------------------
 
-# Subtle arrow indicating "feeds into" relationship
+# A subtle connector arrow is placed deep inside the Required-rows band
+# where the gap between cards is visually clear (no header subtitles).
 ax.annotate(
-    "", xy=(RX - 0.6, 50), xytext=(LX + LW + 0.6, 50),
-    arrowprops=dict(arrowstyle="->", lw=1.6, color="#57606a",
+    "", xy=(RX - 0.6, 76.3), xytext=(LX + LW + 0.6, 76.3),
+    arrowprops=dict(arrowstyle="->", lw=1.4, color="#8c959f",
                     connectionstyle="arc3,rad=0.0"),
 )
-ax.text((LX + LW + RX) / 2 + 0.0, 51.6,
-        "(cfg, ctx)",
-        ha="center", va="bottom", fontsize=9.5,
-        family="monospace", color=TEXT_DARK,
-        bbox=dict(boxstyle="round,pad=0.25", fc="white", ec="#57606a", lw=0.7))
-ax.text((LX + LW + RX) / 2 + 0.0, 48.3,
-        "pure gate(cfg, ctx) -> bool",
-        ha="center", va="top", fontsize=8.6,
-        color=TEXT_MUTED, style="italic")
 
 # Footer legends, placed below both cards
 legend_y = 3.5

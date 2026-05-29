@@ -21,32 +21,48 @@ COLOR_CASCADE = "#FCE3CB"          # accent
 COLOR_CASCADE_EDGE = "#D46B1F"     # accent edge
 COLOR_RENDER = "#CFE0EF"
 COLOR_RENDER_EDGE = "#1F4E79"
+COLOR_SIDE_FC = "#F2F2F2"
+COLOR_SIDE_EC = "#7A7A7A"
 COLOR_TEXT = "#1A1A1A"
-COLOR_SIDE = "#6B6B6B"
+COLOR_SIDE = "#5A5A5A"
 COLOR_ARROW = "#33597A"
+COLOR_SIDE_ARROW = "#7A7A7A"
 
-fig, ax = plt.subplots(figsize=(15, 6.6), dpi=200)
-ax.set_xlim(0, 100)
-ax.set_ylim(0, 50)
+fig, ax = plt.subplots(figsize=(17, 7.6), dpi=200)
+ax.set_xlim(0, 112)
+ax.set_ylim(0, 52)
 ax.set_aspect("equal")
 ax.axis("off")
 fig.patch.set_facecolor(COLOR_BG)
 
 # --- Title ---
 ax.text(
-    50, 47.5,
+    56, 49.5,
     "BTF Pipeline: Context $\\rightarrow$ Config $\\rightarrow$ Cascade $\\rightarrow$ Render",
     ha="center", va="center", fontsize=15, fontweight="bold", color=COLOR_TEXT,
 )
 
-# Layout: four boxes horizontally arranged
-# Each box: width 16, height 14, centered vertically around y=22
-BOX_Y = 15
+# Layout: four main pipeline boxes plus flanking side nodes
+BOX_Y = 14
 BOX_H = 16
-BOX_W = 16
-GAP = 5  # arrow gap
+BOX_W = 15
+GAP = 4              # arrow gap between main boxes
+SIDE_W = 12
+SIDE_H = 14
+SIDE_Y = BOX_Y + 1   # vertically centered relative to main boxes
+GAP_SIDE = 6         # gap between side node and adjacent main box
 
-xs = [4, 4 + BOX_W + GAP, 4 + 2 * (BOX_W + GAP), 4 + 3 * (BOX_W + GAP)]
+CLF_X = 1
+PIPE_START = CLF_X + SIDE_W + GAP_SIDE  # 18
+
+xs = [
+    PIPE_START,
+    PIPE_START + BOX_W + GAP,
+    PIPE_START + 2 * (BOX_W + GAP),
+    PIPE_START + 3 * (BOX_W + GAP),
+]
+# = [18, 37, 56, 75]; box right edges at [33, 52, 71, 90]
+LLM_X = xs[3] + BOX_W + GAP_SIDE  # 95; LLM box ends at 107
 
 boxes = [
     {
@@ -95,34 +111,33 @@ boxes = [
     },
 ]
 
-def draw_box(ax, x, y, w, h, fc, ec, title, items, title_color):
+
+def draw_box(ax, x, y, w, h, fc, ec, title, items, title_color,
+             title_fs=12.5, item_fs=10.2, item_top_offset=5.0, line_h=1.85):
     box = FancyBboxPatch(
         (x, y), w, h,
         boxstyle="round,pad=0.25,rounding_size=0.9",
         linewidth=1.8, facecolor=fc, edgecolor=ec,
     )
     ax.add_patch(box)
-    # Title bar text
     ax.text(
         x + w / 2, y + h - 2.0, title,
         ha="center", va="center",
-        fontsize=12.5, fontweight="bold", color=title_color,
+        fontsize=title_fs, fontweight="bold", color=title_color,
     )
-    # Separator
     ax.plot(
         [x + 1.2, x + w - 1.2],
         [y + h - 3.6, y + h - 3.6],
         color=ec, linewidth=1.0, alpha=0.5,
     )
-    # Items
-    item_top = y + h - 5.0
-    line_h = 1.85
+    item_top = y + h - item_top_offset
     for i, txt in enumerate(items):
         ax.text(
             x + w / 2, item_top - i * line_h, txt,
             ha="center", va="center",
-            fontsize=10.2, color=COLOR_TEXT,
+            fontsize=item_fs, color=COLOR_TEXT,
         )
+
 
 for b in boxes:
     draw_box(
@@ -130,14 +145,15 @@ for b in boxes:
         b["fc"], b["ec"], b["title"], b["items"], b["ec"],
     )
 
-# --- Arrows between boxes ---
-def draw_arrow(ax, x1, x2, y):
+# --- Arrows between main boxes ---
+def draw_arrow(ax, x1, x2, y, color=COLOR_ARROW, lw=2.2, mut=20):
     arr = FancyArrowPatch(
         (x1, y), (x2, y),
-        arrowstyle="-|>", mutation_scale=20,
-        linewidth=2.2, color=COLOR_ARROW,
+        arrowstyle="-|>", mutation_scale=mut,
+        linewidth=lw, color=color,
     )
     ax.add_patch(arr)
+
 
 arrow_y = BOX_Y + BOX_H / 2
 for i in range(3):
@@ -145,81 +161,61 @@ for i in range(3):
     x2 = xs[i + 1] - 0.3
     draw_arrow(ax, x1, x2, arrow_y)
 
-# --- Left edge: classifier source ---
-clf_x = 1.0
-ax.text(
-    clf_x, arrow_y + 6.8,
-    "Classifier",
-    ha="left", va="center", fontsize=11, fontweight="bold", color=COLOR_SIDE,
-)
-clf_lines = [
+# --- Left side node: Classifier ---
+clf_items = [
     "top-1 prediction",
     "top-k distribution",
     "confidence",
     "entropy",
+    "question / dataset meta",
 ]
-for i, t in enumerate(clf_lines):
-    ax.text(
-        clf_x, arrow_y + 4.7 - i * 1.7, t,
-        ha="left", va="center", fontsize=9.5, color=COLOR_SIDE, style="italic",
-    )
-# Bracket-ish arrow from classifier region into Context box
-in_arrow = FancyArrowPatch(
-    (clf_x + 3.0, arrow_y - 2.5), (xs[0] - 0.2, arrow_y),
-    arrowstyle="-|>", mutation_scale=18,
-    linewidth=1.8, color=COLOR_SIDE,
-    connectionstyle="arc3,rad=-0.15",
+draw_box(
+    ax, CLF_X, SIDE_Y, SIDE_W, SIDE_H,
+    COLOR_SIDE_FC, COLOR_SIDE_EC,
+    "Classifier", clf_items, COLOR_SIDE,
+    title_fs=11.5, item_fs=8.8, item_top_offset=4.4, line_h=1.7,
 )
-ax.add_patch(in_arrow)
 
-# --- Right edge: downstream LLM ---
-llm_x = xs[3] + BOX_W + 0.2
-ax.text(
-    llm_x + 4.0, arrow_y + 6.8,
-    "Downstream LLM",
-    ha="center", va="center", fontsize=11, fontweight="bold", color=COLOR_SIDE,
+# Arrow from Classifier into TemplateContext
+draw_arrow(
+    ax,
+    CLF_X + SIDE_W + 0.3, xs[0] - 0.3, arrow_y,
+    color=COLOR_SIDE_ARROW, lw=1.8, mut=18,
 )
-llm_lines = [
+
+# --- Right side node: Downstream LLM ---
+llm_items = [
     "receives prefix",
-    "as opening of",
-    "chain of thought",
+    "opens chain of thought",
+    "generates answer",
 ]
-for i, t in enumerate(llm_lines):
-    ax.text(
-        llm_x + 4.0, arrow_y + 4.7 - i * 1.7, t,
-        ha="center", va="center", fontsize=9.5, color=COLOR_SIDE, style="italic",
-    )
-out_arrow = FancyArrowPatch(
-    (llm_x, arrow_y), (llm_x + 7.5, arrow_y - 2.5),
-    arrowstyle="-|>", mutation_scale=18,
-    linewidth=1.8, color=COLOR_SIDE,
-    connectionstyle="arc3,rad=-0.15",
-)
-ax.add_patch(out_arrow)
-
-# Caption under right arrow
-ax.text(
-    llm_x + 4.0, arrow_y - 5.2,
-    "rendered prefix",
-    ha="center", va="center", fontsize=10, color=COLOR_RENDER_EDGE, fontweight="bold",
+LLM_H_SMALL = 11
+LLM_Y = SIDE_Y + (SIDE_H - LLM_H_SMALL) / 2
+draw_box(
+    ax, LLM_X, LLM_Y, SIDE_W, LLM_H_SMALL,
+    COLOR_SIDE_FC, COLOR_SIDE_EC,
+    "Downstream LLM", llm_items, COLOR_SIDE,
+    title_fs=11.5, item_fs=8.8, item_top_offset=4.0, line_h=1.7,
 )
 
-# Caption under left arrow
-ax.text(
-    (clf_x + 3.0 + xs[0]) / 2, arrow_y - 5.2,
-    "TemplateContext fields",
-    ha="center", va="center", fontsize=10, color=COLOR_CONTEXT_EDGE, fontweight="bold",
+# Arrow from Render into Downstream LLM
+draw_arrow(
+    ax,
+    xs[3] + BOX_W + 0.3, LLM_X - 0.3, arrow_y,
+    color=COLOR_SIDE_ARROW, lw=1.8, mut=18,
 )
 
 # --- Bottom footer note ---
 ax.text(
-    50, 4.0,
+    56, 5.0,
     "Cascade walks the priority-sorted union of REGISTRY $\\cup$ ASSERTIVE_FALLBACK and returns the first firing template.",
     ha="center", va="center", fontsize=10, color=COLOR_TEXT, style="italic",
 )
 
-# --- Legend for accent color ---
+# --- Legend ---
 legend_handles = [
+    Line2D([0], [0], marker="s", color="w", markerfacecolor=COLOR_SIDE_FC,
+           markeredgecolor=COLOR_SIDE_EC, markersize=12, label="External"),
     Line2D([0], [0], marker="s", color="w", markerfacecolor=COLOR_CONTEXT,
            markeredgecolor=COLOR_CONTEXT_EDGE, markersize=12, label="Inputs"),
     Line2D([0], [0], marker="s", color="w", markerfacecolor=COLOR_CASCADE,
@@ -230,7 +226,7 @@ legend_handles = [
 ax.legend(
     handles=legend_handles, loc="lower right",
     bbox_to_anchor=(0.99, 0.02), frameon=False, fontsize=9,
-    ncol=3, handletextpad=0.4, columnspacing=1.2,
+    ncol=4, handletextpad=0.4, columnspacing=1.2,
 )
 
 plt.tight_layout()

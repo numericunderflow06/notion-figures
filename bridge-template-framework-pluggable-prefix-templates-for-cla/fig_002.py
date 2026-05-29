@@ -26,8 +26,8 @@ CTRL_ARROW = "#1565C0"
 ERR_ARROW = "#C62828"
 RET_ARROW = "#2E7D32"
 
-fig, ax = plt.subplots(figsize=(11, 14), dpi=200)
-ax.set_xlim(0, 10)
+fig, ax = plt.subplots(figsize=(13, 14), dpi=200)
+ax.set_xlim(-2.2, 10)
 ax.set_ylim(0, 18)
 ax.axis("off")
 ax.set_facecolor("white")
@@ -61,9 +61,12 @@ def loop_container(x, y, w, h, label, fill, edge):
         linestyle="--",
     )
     ax.add_patch(box)
-    ax.text(x - w / 2 + 0.15, y + h / 2 - 0.25, label,
-            ha="left", va="center", fontsize=10,
-            color=edge, weight="bold", style="italic")
+    # Vertical header label running along the left side of the loop container,
+    # well away from the central down-arrow and the loop-back curve.
+    ax.text(x - w / 2 - 0.25, y, label,
+            ha="center", va="center", fontsize=10,
+            color=edge, weight="bold", style="italic",
+            rotation=90)
 
 
 def arrow(x1, y1, x2, y2, color=CTRL_ARROW, label=None,
@@ -187,11 +190,13 @@ loop_back = FancyArrowPatch(
     (3.2, 5.85), (2.55, 12.7),
     arrowstyle="-|>", mutation_scale=18,
     linewidth=1.8, color=LOOP_EDGE,
-    connectionstyle="arc3,rad=-0.45",
+    connectionstyle="arc3,rad=-0.32",
     linestyle="--",
 )
 ax.add_patch(loop_back)
-ax.text(1.4, 9.3, "yes\nnext\ntpl",
+# Place the loop label below the curve apex so it does not collide with
+# either the dashed arrow or the vertical loop header.
+ax.text(1.55, 7.05, "yes\nnext tpl",
         ha="center", va="center", fontsize=9,
         color=LOOP_EDGE, weight="bold",
         bbox=dict(boxstyle="round,pad=0.25",
@@ -242,8 +247,8 @@ ax.legend(handles=legend_elements, loc="lower left",
           edgecolor="#999", title="Edge semantics",
           title_fontsize=10)
 
-# Side annotation about Section 9
-ax.text(0.15, 14.6,
+# Side annotation about Section 9 — anchored in the expanded left margin
+ax.text(-2.05, 14.6,
         "Section 9:\nGate exceptions are\nlocalised — the offending\n"
         "template name is\nembedded in the\nRuntimeError message,\n"
         "with the original\nexception chained via\n'from exc'.",
