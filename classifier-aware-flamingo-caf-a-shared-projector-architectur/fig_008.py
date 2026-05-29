@@ -20,23 +20,23 @@ PALETTE = {
     "muted":   "#6B7280",
 }
 
-fig, ax = plt.subplots(figsize=(15.5, 7.6), dpi=200)
+fig, ax = plt.subplots(figsize=(15.5, 9.6), dpi=200)
 ax.set_xlim(0, 100)
-ax.set_ylim(0, 56)
+ax.set_ylim(0, 70)
 ax.axis("off")
 fig.patch.set_facecolor("white")
 
 # ---- title + caption ----
-ax.text(50, 53.6, "Representation Analysis Pipeline",
+ax.text(50, 67.6, "Representation Analysis Pipeline",
         ha="center", va="center", fontsize=17, fontweight="bold",
         color=PALETTE["ink"])
-ax.text(50, 50.4,
+ax.text(50, 64.4,
         "Planned probing of a trained CAF checkpoint  ·  methodology only — not measured",
         ha="center", va="center", fontsize=11, style="italic",
         color=PALETTE["muted"])
 
 # ---- checkpoint node (left) ----
-ckpt_x, ckpt_y, ckpt_w, ckpt_h = 2.5, 19, 15, 16
+ckpt_x, ckpt_y, ckpt_w, ckpt_h = 2.5, 33, 15, 16
 ckpt = FancyBboxPatch((ckpt_x, ckpt_y), ckpt_w, ckpt_h,
                       boxstyle="round,pad=0.3,rounding_size=1.2",
                       linewidth=2.0, edgecolor=PALETTE["ckpt"],
@@ -64,7 +64,7 @@ node_x = 38
 node_w = 22
 node_h = 9.5
 gap_y  = 2.0
-top_y  = 39   # top edge of first node
+top_y  = 53   # top edge of first node
 positions = [top_y - i*(node_h + gap_y) for i in range(4)]
 
 node_titles = [
@@ -199,7 +199,7 @@ for ny in positions:
 
 # ---- right-side synthesis panel ----
 syn_x, syn_w = 64, 33
-syn_top, syn_bot = 39, 3.5
+syn_top, syn_bot = 53, 9.0
 syn = FancyBboxPatch((syn_x, syn_bot), syn_w, syn_top - syn_bot,
                      boxstyle="round,pad=0.25,rounding_size=1.0",
                      linewidth=1.4, edgecolor=PALETTE["accent"],
@@ -238,12 +238,12 @@ for ny in positions:
     ax.add_patch(arrow)
 
 # ---- footer banner: methodology only ----
-banner = FancyBboxPatch((2.5, 0.4), 95, 2.4,
+banner = FancyBboxPatch((2.5, 2.4), 95, 3.0,
                         boxstyle="round,pad=0.1,rounding_size=0.6",
                         linewidth=1.0, edgecolor=PALETTE["accent"],
                         facecolor="#FDECEA")
 ax.add_patch(banner)
-ax.text(50, 1.6,
+ax.text(50, 3.9,
         "Methodology only — no checkpoints trained yet; thumbnails are illustrative placeholders.",
         ha="center", va="center", fontsize=10.5, fontweight="bold",
         color=PALETTE["accent"])

@@ -18,33 +18,33 @@ MATRIX_EDGE = "#3A3A3A"
 INPUT_BG = "#F7F7F7"
 OUTPUT_BG = "#F2F8FB"
 
-fig, ax = plt.subplots(figsize=(14, 8), dpi=200)
+fig, ax = plt.subplots(figsize=(14, 9), dpi=200)
 ax.set_xlim(0, 14)
-ax.set_ylim(0, 8)
+ax.set_ylim(0, 9)
 ax.axis("off")
 fig.patch.set_facecolor("white")
 
 # Title
-ax.text(7.0, 7.55,
+ax.text(7.0, 8.55,
         "Shared Projector  —  One Linear, Three Paths",
         ha="center", va="center",
         fontsize=18, fontweight="bold", color="#202020")
-ax.text(7.0, 7.10,
+ax.text(7.0, 8.10,
         r"A single $\mathrm{nn.Linear}(d_{\mathrm{lat}}, d_{\mathrm{llm}})$ instance serves classifier, perceiver, and instruct paths",
         ha="center", va="center",
         fontsize=11.5, style="italic", color="#505050")
 
 # ---- Left column: latent space label ----
-ax.text(1.7, 6.20, r"$\mathbb{R}^{d_{\mathrm{lat}}}$",
+ax.text(1.7, 7.20, r"$\mathbb{R}^{d_{\mathrm{lat}}}$",
         ha="center", va="center", fontsize=18, fontweight="bold", color="#303030")
-ax.text(1.7, 5.75, "(latent space)",
+ax.text(1.7, 6.75, "(latent space)",
         ha="center", va="center", fontsize=10, color="#707070")
 
 # Three input tokens on the left
 input_specs = [
-    ("Classifier  (E_cls)",     "verdict embedding",        TEAL,   5.05),
-    ("Perceiver  (Q_perc)",     "TS perceiver output",      ORANGE, 3.55),
-    ("Instruct  (E_inst)",      "task-level tokens (opt.)", PURPLE, 2.05),
+    ("Classifier  (E_cls)",     "verdict embedding",        TEAL,   6.05),
+    ("Perceiver  (Q_perc)",     "TS perceiver output",      ORANGE, 4.55),
+    ("Instruct  (E_inst)",      "task-level tokens (opt.)", PURPLE, 3.05),
 ]
 
 input_x = 1.7
@@ -65,7 +65,7 @@ for label, sub, color, y in input_specs:
             ha="center", va="center", fontsize=9.5, color="#555555")
 
 # ---- Middle: shared projector matrix W ----
-mat_cx, mat_cy = 7.0, 3.55
+mat_cx, mat_cy = 7.0, 4.55
 mat_w, mat_h = 2.4, 3.2
 
 # Outer matrix box
@@ -101,11 +101,11 @@ ax.text(mat_cx, mat_cy + mat_h / 2 - 0.35,
         ha="center", va="center", fontsize=26, fontweight="bold",
         color="#202020", zorder=6)
 
-# Shape annotation under W
-ax.text(mat_cx, mat_cy - mat_h / 2 - 0.30,
+# Shape annotation directly under the matrix (its own band)
+ax.text(mat_cx, mat_cy - mat_h / 2 - 0.35,
         r"$\mathbf{W} \in \mathbb{R}^{d_{\mathrm{llm}} \times d_{\mathrm{lat}}}$",
         ha="center", va="center", fontsize=12.5, color="#202020")
-ax.text(mat_cx, mat_cy - mat_h / 2 - 0.62,
+ax.text(mat_cx, mat_cy - mat_h / 2 - 0.70,
         r"$\mathrm{nn.Linear}(d_{\mathrm{lat}},\ d_{\mathrm{llm}})$  —  single instance",
         ha="center", va="center", fontsize=10.5, color="#404040",
         fontfamily="monospace")
@@ -116,16 +116,16 @@ ax.text(mat_cx, mat_cy + mat_h / 2 + 0.30,
         ha="center", va="center", fontsize=12, fontweight="bold", color="#202020")
 
 # ---- Right column: d_llm space label ----
-ax.text(12.3, 6.20, r"$\mathbb{R}^{d_{\mathrm{llm}}}$",
+ax.text(12.3, 7.20, r"$\mathbb{R}^{d_{\mathrm{llm}}}$",
         ha="center", va="center", fontsize=18, fontweight="bold", color="#303030")
-ax.text(12.3, 5.75, "(LLM token space)",
+ax.text(12.3, 6.75, "(LLM token space)",
         ha="center", va="center", fontsize=10, color="#707070")
 
 # Three output tokens on the right
 output_specs = [
-    (r"$P(E_{\mathrm{cls}})$",     "classifier token",  TEAL,   5.05),
-    (r"$P(Q_{\mathrm{perc}})$",    "perceiver tokens",  ORANGE, 3.55),
-    (r"$P(E_{\mathrm{inst}})$",    "instruct tokens",   PURPLE, 2.05),
+    (r"$P(E_{\mathrm{cls}})$",     "classifier token",  TEAL,   6.05),
+    (r"$P(Q_{\mathrm{perc}})$",    "perceiver tokens",  ORANGE, 4.55),
+    (r"$P(E_{\mathrm{inst}})$",    "instruct tokens",   PURPLE, 3.05),
 ]
 
 output_x = 12.3
@@ -149,7 +149,7 @@ for label, sub, color, y in output_specs:
 in_right_edge = input_x + input_w / 2
 mat_left_edge = mat_cx - mat_w / 2
 
-ys = [5.05, 3.55, 2.05]
+ys = [6.05, 4.55, 3.05]
 colors = [TEAL, ORANGE, PURPLE]
 for y, color in zip(ys, colors):
     arr = FancyArrowPatch(
@@ -174,41 +174,17 @@ for y, color in zip(ys, colors):
     ax.add_patch(arr)
 
 # Annotate the central operation
-ax.text(mat_cx, 6.55,
+ax.text(mat_cx, 7.55,
         r"$\mathbf{x} \in \mathbb{R}^{d_{\mathrm{lat}}} \;\longmapsto\; \mathbf{W}\mathbf{x} \in \mathbb{R}^{d_{\mathrm{llm}}}$",
         ha="center", va="center", fontsize=12.5, color="#303030",
         bbox=dict(boxstyle="round,pad=0.35", facecolor="#FAFAEC",
                   edgecolor="#BBB8A0", linewidth=1.0))
 
-# ---- Footer: defaults box ----
-footer_y = 0.85
-footer_box = FancyBboxPatch(
-    (1.2, 0.30), 11.6, 0.95,
-    boxstyle="round,pad=0.02,rounding_size=0.10",
-    linewidth=1.2, edgecolor="#888888", facecolor="#FCFCFC", zorder=1,
-)
-ax.add_patch(footer_box)
+# ---- Legend row: clearly separated below the equation labels ----
+legend_y = 1.85
+# Thin separator line above the legend, sitting between the nn.Linear text and legend
+ax.plot([1.6, 12.4], [2.30, 2.30], color="#D8D8D8", linewidth=0.8, zorder=1)
 
-ax.text(2.0, footer_y + 0.20, "Defaults",
-        ha="left", va="center", fontsize=11, fontweight="bold", color="#202020")
-ax.text(2.0, footer_y - 0.18,
-        r"$d_{\mathrm{lat}} = d_{\mathrm{llm}} = 3072$",
-        ha="left", va="center", fontsize=11, color="#202020")
-
-ax.text(7.0, footer_y + 0.20, "Parameter count",
-        ha="left", va="center", fontsize=11, fontweight="bold", color="#202020")
-ax.text(7.0, footer_y - 0.18,
-        r"$d_{\mathrm{llm}} \times d_{\mathrm{lat}} + d_{\mathrm{llm}} \approx 9.4\mathrm{M}$",
-        ha="left", va="center", fontsize=11, color="#202020")
-
-ax.text(10.6, footer_y + 0.20, "Rationale",
-        ha="left", va="center", fontsize=11, fontweight="bold", color="#202020")
-ax.text(10.6, footer_y - 0.18,
-        "shared latent geometry",
-        ha="left", va="center", fontsize=10.5, color="#202020")
-
-# Legend chips above footer
-legend_y = 1.55
 legend_items = [
     ("classifier path",  TEAL),
     ("perceiver path",   ORANGE),
@@ -220,6 +196,35 @@ for (label, color), lx in zip(legend_items, legend_x_positions):
                            facecolor=color, edgecolor="none", zorder=3))
     ax.text(lx + 0.40, legend_y, label,
             ha="left", va="center", fontsize=10.5, color="#303030")
+
+# ---- Footer: defaults box (well below the legend) ----
+footer_box = FancyBboxPatch(
+    (1.2, 0.20), 11.6, 1.10,
+    boxstyle="round,pad=0.02,rounding_size=0.10",
+    linewidth=1.2, edgecolor="#888888", facecolor="#FCFCFC", zorder=1,
+)
+ax.add_patch(footer_box)
+
+footer_top = 1.00
+footer_bot = 0.50
+
+ax.text(2.0, footer_top, "Defaults",
+        ha="left", va="center", fontsize=11, fontweight="bold", color="#202020")
+ax.text(2.0, footer_bot,
+        r"$d_{\mathrm{lat}} = d_{\mathrm{llm}} = 3072$",
+        ha="left", va="center", fontsize=11, color="#202020")
+
+ax.text(6.2, footer_top, "Parameter count",
+        ha="left", va="center", fontsize=11, fontweight="bold", color="#202020")
+ax.text(6.2, footer_bot,
+        r"$d_{\mathrm{llm}} \times d_{\mathrm{lat}} + d_{\mathrm{llm}} \approx 9.4\mathrm{M}$",
+        ha="left", va="center", fontsize=11, color="#202020")
+
+ax.text(10.6, footer_top, "Rationale",
+        ha="left", va="center", fontsize=11, fontweight="bold", color="#202020")
+ax.text(10.6, footer_bot,
+        "shared latent geometry",
+        ha="left", va="center", fontsize=10.5, color="#202020")
 
 plt.tight_layout()
 out_path = "/home/wangni/notion-figures/classifier-aware-flamingo-caf-a-shared-projector-architectur/fig_002.png"
