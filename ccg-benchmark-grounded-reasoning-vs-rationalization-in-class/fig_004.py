@@ -8,7 +8,7 @@ import matplotlib.patches as mpatches
 from matplotlib.patches import Rectangle
 
 # --- Matrix definition -------------------------------------------------------
-columns = ["OpenTSLM-Flamingo", "GPT-4o (text TS)", "GPT-4o (plot TS)"]
+columns = ["OpenTSLM-\nFlamingo", "GPT-4o\n(text TS)", "GPT-4o\n(plot TS)"]
 rows = ["Prompt injection", "Soft-prompt", "Residual CCG", "Visual annotation"]
 
 # Status codes:
@@ -47,7 +47,7 @@ HATCH_COLOR = "#546E7A"
 n_rows = len(rows)
 n_cols = len(columns)
 
-fig, ax = plt.subplots(figsize=(11.5, 7.0), dpi=200)
+fig, ax = plt.subplots(figsize=(11.5, 8.2), dpi=200)
 fig.patch.set_facecolor("white")
 ax.set_facecolor("white")
 
@@ -118,10 +118,10 @@ ax.set_aspect("equal")
 for c, col_name in enumerate(columns):
     ax.text(
         left_pad + c * cell_w + cell_w / 2,
-        top_pad + n_rows * cell_h + 0.18,
+        top_pad + n_rows * cell_h + 0.10,
         col_name,
         ha="center", va="bottom",
-        fontsize=12, fontweight="bold",
+        fontsize=11, fontweight="bold",
         color="#212121",
     )
 
@@ -136,14 +136,7 @@ for r, row_name in enumerate(rows):
         color="#212121",
     )
 
-# Group label headers
-ax.text(
-    left_pad + (n_cols * cell_w) / 2,
-    top_pad + n_rows * cell_h + 0.55,
-    "Models",
-    ha="center", va="bottom",
-    fontsize=13, fontweight="bold", color="#37474F",
-)
+# Group axis label (left side only — "Models" is stated in the title)
 ax.text(
     left_pad - 1.25,
     top_pad + (n_rows * cell_h) / 2,
@@ -153,11 +146,17 @@ ax.text(
     rotation=90,
 )
 
-# Title
-ax.set_title(
-    "Core Study Matrix Coverage\n"
+# Title — placed via fig.suptitle for clean separation from column headers
+fig.suptitle(
+    "Core Study Matrix Coverage",
+    fontsize=15, fontweight="bold", color="#212121",
+    y=0.985,
+)
+fig.text(
+    0.5, 0.945,
     "Models × injection methods — submission run inventory",
-    fontsize=14, fontweight="bold", pad=22, color="#212121",
+    ha="center", va="top",
+    fontsize=11, style="italic", color="#455A64",
 )
 
 ax.set_xticks([])
@@ -195,7 +194,7 @@ fig.text(
     fontsize=9, style="italic", color="#455A64",
 )
 
-plt.tight_layout()
+plt.subplots_adjust(top=0.86, bottom=0.16, left=0.13, right=0.97)
 out_path = "/home/wangni/notion-figures/ccg-benchmark-grounded-reasoning-vs-rationalization-in-class/fig_004.png"
 plt.savefig(out_path, dpi=200, bbox_inches="tight", facecolor="white")
 plt.close(fig)

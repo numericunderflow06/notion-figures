@@ -30,22 +30,22 @@ LEAF_COLORS = {
     "reasoning_only_away":    "#F9A825",
 }
 
-fig, ax = plt.subplots(figsize=(16, 10), dpi=200)
-ax.set_xlim(0, 16)
-ax.set_ylim(0, 10)
+fig, ax = plt.subplots(figsize=(23, 11), dpi=200)
+ax.set_xlim(0, 23)
+ax.set_ylim(0, 11)
 ax.set_axis_off()
 ax.set_facecolor("white")
 fig.patch.set_facecolor("white")
 
 # ---------- Title ----------
 ax.text(
-    8, 9.55,
+    11.5, 10.55,
     "Factorized 8-Cell Rationale-Effect Taxonomy",
     ha="center", va="center",
     fontsize=18, fontweight="bold",
 )
 ax.text(
-    8, 9.10,
+    11.5, 10.05,
     "Three orthogonal axes from poc_rationale_effect_judge.py "
     "decompose into 8 named cells\n"
     "(cross-tabbed with the 5-regime labels: grounded / rationalizing / "
@@ -72,7 +72,7 @@ def node(x, y, w, h, label, fc, ec="black", fontsize=10.5, fontweight="normal", 
     )
 
 def arrow(x1, y1, x2, y2, color="#555555", label=None, label_offset=(0, 0),
-          label_color=None, label_bg=None, label_fontsize=9.5, label_weight="bold"):
+          label_color=None, label_bg=None, label_fontsize=9.0, label_weight="bold"):
     a = FancyArrowPatch(
         (x1, y1), (x2, y2),
         arrowstyle="-|>",
@@ -99,128 +99,123 @@ def arrow(x1, y1, x2, y2, color="#555555", label=None, label_offset=(0, 0),
         )
 
 # ---------- Layout coords ----------
-# Levels (y): root=8.1  L1=6.6  L2=5.0  leaves=3.0
-Y_ROOT = 8.1
-Y_L1   = 6.55
-Y_L2   = 4.95
-Y_LEAF = 2.85
+Y_ROOT = 9.05
+Y_L1   = 7.50
+Y_L2   = 5.85
+Y_LEAF = 3.55
 
-# Root node
-node(8, Y_ROOT, 4.8, 0.75,
+# Root node (center of the tree area, x=12)
+node(12, Y_ROOT, 5.0, 0.78,
      "Rationale effect of class signal\non a single generation",
      fc="#F2F2F2", ec="#222222", fontweight="bold", fontsize=11)
 
 # L1 — axis 1 split: answer_changed
-# Two branches:
-node(4, Y_L1, 4.2, 0.78,
+node(7, Y_L1, 4.4, 0.80,
      "answer_changed = NO\n(programmatic match)",
      fc=COL_AX1, ec="black", fontweight="bold", fontsize=10.5, txtcolor="white")
-node(12, Y_L1, 4.2, 0.78,
+node(17, Y_L1, 4.4, 0.80,
      "answer_changed = YES\n(programmatic match)",
      fc=COL_AX1, ec="black", fontweight="bold", fontsize=10.5, txtcolor="white")
 
-arrow(8, Y_ROOT - 0.38, 4, Y_L1 + 0.40, color=COL_AX1)
-arrow(8, Y_ROOT - 0.38, 12, Y_L1 + 0.40, color=COL_AX1)
-
-# Axis-1 callout
-ax.text(8, Y_L1 + 0.95, "Axis 1 · answer_changed  (programmatic)",
-        ha="center", va="center", fontsize=10, fontweight="bold",
-        color=COL_AX1)
+arrow(12, Y_ROOT - 0.39, 7, Y_L1 + 0.41, color=COL_AX1)
+arrow(12, Y_ROOT - 0.39, 17, Y_L1 + 0.41, color=COL_AX1)
 
 # L2 — axis 2 split: reasoning_changed under each L1 branch
-# Left (answer_changed = NO)
-node(2.1, Y_L2, 3.4, 0.72,
+node(4.5, Y_L2, 3.4, 0.74,
      "reasoning_changed = NO",
      fc=COL_AX2, ec="black", fontweight="bold", fontsize=10, txtcolor="white")
-node(5.9, Y_L2, 3.4, 0.72,
+node(9.5, Y_L2, 3.4, 0.74,
      "reasoning_changed = YES",
      fc=COL_AX2, ec="black", fontweight="bold", fontsize=10, txtcolor="white")
 
-arrow(4, Y_L1 - 0.40, 2.1, Y_L2 + 0.37, color=COL_AX2)
-arrow(4, Y_L1 - 0.40, 5.9, Y_L2 + 0.37, color=COL_AX2)
+arrow(7, Y_L1 - 0.41, 4.5, Y_L2 + 0.38, color=COL_AX2)
+arrow(7, Y_L1 - 0.41, 9.5, Y_L2 + 0.38, color=COL_AX2)
 
-# Right (answer_changed = YES)
-node(10.1, Y_L2, 3.4, 0.72,
+node(14.5, Y_L2, 3.4, 0.74,
      "reasoning_changed = NO",
      fc=COL_AX2, ec="black", fontweight="bold", fontsize=10, txtcolor="white")
-node(13.9, Y_L2, 3.4, 0.72,
+node(19.5, Y_L2, 3.4, 0.74,
      "reasoning_changed = YES",
      fc=COL_AX2, ec="black", fontweight="bold", fontsize=10, txtcolor="white")
 
-arrow(12, Y_L1 - 0.40, 10.1, Y_L2 + 0.37, color=COL_AX2)
-arrow(12, Y_L1 - 0.40, 13.9, Y_L2 + 0.37, color=COL_AX2)
+arrow(17, Y_L1 - 0.41, 14.5, Y_L2 + 0.38, color=COL_AX2)
+arrow(17, Y_L1 - 0.41, 19.5, Y_L2 + 0.38, color=COL_AX2)
 
-# Axis-2 callout
-ax.text(8, Y_L2 + 0.65, "Axis 2 · reasoning_changed  (LLM-judged)",
-        ha="center", va="center", fontsize=10, fontweight="bold",
-        color=COL_AX2)
+# ---------- Axis labels (left-margin row labels) ----------
+def axis_label(y, num, name, sub, color):
+    ax.text(
+        1.55, y,
+        f"AXIS {num}\n{name}\n{sub}",
+        ha="center", va="center",
+        fontsize=10, fontweight="bold", color=color,
+        bbox=dict(
+            boxstyle="round,pad=0.45",
+            fc="white", ec=color, lw=1.4,
+        ),
+    )
+
+# Place each axis label vertically centered between the parent level
+# and the child level it splits into — in the LEFT MARGIN so it does not
+# collide with any connecting arrow.
+axis_label((Y_ROOT + Y_L1) / 2, 1, "answer_changed", "(programmatic)",          COL_AX1)
+axis_label((Y_L1   + Y_L2) / 2, 2, "reasoning_changed", "(LLM-judged)",         COL_AX2)
+axis_label((Y_L2 + Y_LEAF) / 2, 3, "reasoning_direction",
+           "(LLM-judged,\nonly if reasoning_changed = YES)",                    COL_AX3)
 
 # ---------- Leaves ----------
-# 1. answer NO,  reasoning NO  → no_effect            (single leaf)
-# 2. answer NO,  reasoning YES → reasoning_only_{toward, lateral, away}
-# 3. answer YES, reasoning NO  → label_forcing        (single leaf)
-# 4. answer YES, reasoning YES → full_follow / knocked_off_lateral / knocked_off_away
-
-leaf_w = 2.05
-leaf_h = 0.95
+leaf_w = 1.95
+leaf_h = 1.05
 
 def leaf(x, y, name, subtitle):
     node(x, y, leaf_w, leaf_h, f"{name}\n{subtitle}",
-         fc=LEAF_COLORS[name], ec="black", fontweight="bold", fontsize=9.5)
+         fc=LEAF_COLORS[name], ec="black", fontweight="bold", fontsize=8.6)
 
-# Branch A: no_effect (single leaf, sits straight under "reasoning_changed = NO")
-leaf(2.1, Y_LEAF, "no_effect",
+# Branch A: no_effect (single leaf under left-NO L2)
+leaf(4.5, Y_LEAF, "no_effect",
      "answer unchanged\nreasoning unchanged")
-arrow(2.1, Y_L2 - 0.37, 2.1, Y_LEAF + 0.50, color="#555555")
+arrow(4.5, Y_L2 - 0.38, 4.5, Y_LEAF + 0.55, color="#555555")
 
-# Branch B: reasoning_only_{toward, lateral, away}
-# Place three leaves under x=5.9
-x_b = [4.5, 6.0, 7.6]
+# Branch B: reasoning_only_{toward, lateral, away}  (under x=9.5)
+x_b = [7.3, 9.5, 11.7]
 names_b = ["reasoning_only_toward", "reasoning_only_lateral", "reasoning_only_away"]
-subs_b  = ["answer unchanged\nreasoning ↗ toward signal",
-           "answer unchanged\nreasoning ↔ lateral",
-           "answer unchanged\nreasoning ↘ away from signal"]
+subs_b  = ["answer unchanged\nreasoning -> toward",
+           "answer unchanged\nreasoning <-> lateral",
+           "answer unchanged\nreasoning -> away"]
 dir_labels_b = ["toward", "lateral", "away"]
 for xi, n, s, dl in zip(x_b, names_b, subs_b, dir_labels_b):
     leaf(xi, Y_LEAF, n, s)
-    arrow(5.9, Y_L2 - 0.37, xi, Y_LEAF + 0.50,
+    arrow(9.5, Y_L2 - 0.38, xi, Y_LEAF + 0.55,
           color=COL_AX3, label=dl,
-          label_offset=(0.0, 0.05),
+          label_offset=(0.0, 0.0),
           label_bg="white", label_fontsize=8.5)
 
-# Branch C: label_forcing (single leaf)
-leaf(10.1, Y_LEAF, "label_forcing",
+# Branch C: label_forcing (single leaf under right-NO L2 at x=14.5)
+leaf(14.5, Y_LEAF, "label_forcing",
      "answer flipped\nreasoning unchanged")
-arrow(10.1, Y_L2 - 0.37, 10.1, Y_LEAF + 0.50, color="#555555")
+arrow(14.5, Y_L2 - 0.38, 14.5, Y_LEAF + 0.55, color="#555555")
 
-# Branch D: full_follow / knocked_off_lateral / knocked_off_away
-x_d = [12.5, 14.0, 15.6]
+# Branch D: full_follow / knocked_off_lateral / knocked_off_away  (under x=19.5)
+x_d = [17.3, 19.5, 21.7]
 names_d = ["full_follow", "knocked_off_lateral", "knocked_off_away"]
-subs_d  = ["answer flipped\nreasoning ↗ toward signal",
-           "answer flipped\nreasoning ↔ lateral",
-           "answer flipped\nreasoning ↘ away from signal"]
+subs_d  = ["answer flipped\nreasoning -> toward",
+           "answer flipped\nreasoning <-> lateral",
+           "answer flipped\nreasoning -> away"]
 dir_labels_d = ["toward", "lateral", "away"]
 for xi, n, s, dl in zip(x_d, names_d, subs_d, dir_labels_d):
     leaf(xi, Y_LEAF, n, s)
-    arrow(13.9, Y_L2 - 0.37, xi, Y_LEAF + 0.50,
+    arrow(19.5, Y_L2 - 0.38, xi, Y_LEAF + 0.55,
           color=COL_AX3, label=dl,
-          label_offset=(0.0, 0.05),
+          label_offset=(0.0, 0.0),
           label_bg="white", label_fontsize=8.5)
 
-# Axis-3 callout (only applies on the YES-reasoning branches)
-ax.text(8, Y_LEAF + 1.05,
-        "Axis 3 · reasoning_direction  (LLM-judged · only when reasoning_changed = YES)",
-        ha="center", va="center", fontsize=10, fontweight="bold", color=COL_AX3)
-
 # ---------- Bottom: legend + caption ----------
-# Axis legend
 legend_handles = [
     mpatches.Patch(facecolor=COL_AX1, edgecolor="black",
-                   label="Axis 1 · answer_changed  (programmatic)"),
+                   label="Axis 1 - answer_changed  (programmatic)"),
     mpatches.Patch(facecolor=COL_AX2, edgecolor="black",
-                   label="Axis 2 · reasoning_changed  (LLM-judged)"),
+                   label="Axis 2 - reasoning_changed  (LLM-judged)"),
     mpatches.Patch(facecolor=COL_AX3, edgecolor="black",
-                   label="Axis 3 · reasoning_direction  (LLM-judged: toward / lateral / away)"),
+                   label="Axis 3 - reasoning_direction  (LLM-judged: toward / lateral / away)"),
 ]
 leg = ax.legend(
     handles=legend_handles,
@@ -233,17 +228,17 @@ leg = ax.legend(
 
 # Caption
 ax.text(
-    8, 0.95,
+    11.5, 1.30,
     "The three axes are orthogonal: programmatic answer-flip detection "
     "is decoupled from the LLM-judged reasoning-change and direction calls.\n"
     "8 cells arise because reasoning_direction is only defined when "
-    "reasoning_changed = YES (2 × [1 + 3] = 8).  Cross-tabs with the "
-    "5-regime labels are how the page reads each cell.",
+    "reasoning_changed = YES  (2 x [1 + 3] = 8).  "
+    "Cross-tabs with the 5-regime labels are how the page reads each cell.",
     ha="center", va="center",
-    fontsize=9.5, color="#333333",
+    fontsize=10, color="#333333",
 )
 
-plt.tight_layout(rect=[0, 0.05, 1, 0.96])
+plt.tight_layout(rect=[0, 0.05, 1, 0.97])
 plt.savefig(OUT, dpi=200, bbox_inches="tight", facecolor="white")
 plt.close(fig)
 print(f"Saved: {OUT}")
